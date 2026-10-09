@@ -26,11 +26,7 @@
 
     }
 
-
-
     button { font: inherit; }
-
-
 
     .library {
 
@@ -51,28 +47,40 @@
     }
 
     .book-trigger,
+
 .book-close {
+
   background: transparent !important;
+
   border: none !important;
+
   outline: none !important;
+
   box-shadow: none !important;
+
   appearance: none;
+
   -webkit-appearance: none;
+
   padding: 0;
+
   margin: 0;
+
 }
 
 .book-trigger img,
+
 .book-close img {
+
   display: block;
+
   background: transparent;
+
   filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
+
 }
 
-
     /* закрытая книга */
-
-
 
     .book-trigger {
 
@@ -100,8 +108,6 @@
 
     }
 
-
-
     .book-trigger:hover,
 
     .book-trigger:focus-visible {
@@ -114,8 +120,6 @@
 
     }
 
-
-
     .book-trigger img {
 
       display: block;
@@ -127,8 +131,6 @@
       pointer-events: none;
 
     }
-
-
 
     /* оверлей */
 
@@ -144,15 +146,11 @@
 
     }
 
-
-
     .opened.active {
 
       display: block;
 
     }
-
-
 
     .backdrop {
 
@@ -160,13 +158,11 @@
 
       inset: 0;
 
-      background: rgba(11, 12, 16, .78);
+      background: transparent;
 
-      backdrop-filter: blur(4px);
+      backdrop-filter: none;
 
     }
-
-
 
     .viewer {
 
@@ -185,33 +181,61 @@
     }
 
     .close-button {
+
       position: absolute;
+
       top: 12px;
+
       right: 14px;
+
       z-index: 25;
+
       display: grid;
+
       place-items: center;
+
       width: 32px;
+
       height: 32px;
+
       padding: 0;
+
       border: 0;
+
       border-radius: 50%;
+
       background: transparent;
+
       color: rgba(230, 208, 173, .68);
+
       cursor: pointer;
+
       font-family: Arial, sans-serif;
+
       font-size: 18px;
+
       font-weight: 300;
+
       line-height: 1;
+
       transition: color .18s ease, background .18s ease, transform .18s ease;
+
     }
+
     .close-button:hover,
+
     .close-button:focus-visible {
+
       color: #f2d8a5;
+
       background: rgba(80, 54, 32, .22);
+
       transform: rotate(90deg);
+
       outline: none;
+
     }
+
     .close-button:focus-visible { box-shadow: 0 0 0 2px rgba(203, 161, 99, .45); }
 
     .book-wrap {
@@ -224,8 +248,6 @@
 
     }
 
-
-
     .canvas {
 
       position: absolute;
@@ -235,8 +257,6 @@
       overflow: hidden;
 
     }
-
-
 
     .book {
 
@@ -270,8 +290,6 @@
 
     }
 
-
-
     .paper {
 
       position: absolute;
@@ -286,11 +304,7 @@
 
       box-shadow: 0 10px 26px rgba(0,0,0,.22), 0 2px 5px rgba(0,0,0,.12);
 
-  
-
     }
-
-
 
     .paper.left { left: 0; border-radius: 4px 0 0 4px; }
 
@@ -299,8 +313,6 @@
     .book.front-closed .paper.left,
 
     .book.back-closed .paper.right { visibility: hidden; }
-
-
 
     .spine {
 
@@ -336,13 +348,9 @@
 
     }
 
-
-
     .book.front-closed .spine,
 
     .book.back-closed .spine { opacity: 0; }
-
-
 
     .leaf {
 
@@ -366,8 +374,6 @@
 
     }
 
-
-
     .leaf.forward { left: 50%; transform-origin: left center; transform: rotateY(0deg); }
 
     .leaf.forward.turned { transform: rotateY(-180deg); }
@@ -375,8 +381,6 @@
     .leaf.backward { left: 0; transform-origin: right center; transform: rotateY(0deg); }
 
     .leaf.backward.turned { transform: rotateY(180deg); }
-
-
 
     .leaf-face {
 
@@ -390,13 +394,19 @@
 
       overflow: hidden;
 
-      background: #f0eee8;
+      background: transparent;
 
       box-shadow: 0 6px 18px rgba(0,0,0,.19);
 
     }
 
-
+    /* Обложки и пустые стороны: никаких прямоугольных подложек / теней. */
+    .paper.is-cutout,
+    .leaf-face.is-cutout {
+      background: transparent;
+      box-shadow: none;
+    }
+    .leaf-face.is-cutout::after { display: none; }
 
     .leaf-face.back { transform: rotateY(180deg); }
 
@@ -422,8 +432,6 @@
 
     .leaf.backward .leaf-face.back::after { background: linear-gradient(90deg, rgba(0,0,0,.09), transparent 35%); }
 
-
-
     .face-body {
 
       position: relative;
@@ -434,11 +442,9 @@
 
       overflow: hidden;
 
-      background: #ece9e0;
+      background: transparent;
 
     }
-
-
 
     .image-page {
 
@@ -456,71 +462,177 @@
 
     }
 
+    /* ================================================
+       Страницы с НАСТОЯЩИМ ТЕКСТОМ поверх текстуры.
+       Обложки и остальные страницы остаются как были.
+       ================================================ */
+    .text-page {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #ede1cc url('./background.webp') center center / 100% 100% no-repeat;
+      color: #35291f;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 13px;
+      line-height: 1.43;
+      letter-spacing: .005em;
+      cursor: text;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    /* Больше внутренний отступ у корешка. */
+    .text-page.right { padding: 36px 32px 30px 43px; }
+    .text-page.left  { padding: 36px 43px 30px 32px; }
+
+    .text-page-inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(105, 79, 49, .35) transparent;
+    }
+    .text-page-inner::-webkit-scrollbar { width: 4px; }
+    .text-page-inner::-webkit-scrollbar-thumb {
+      background: rgba(105, 79, 49, .3);
+      border-radius: 3px;
+    }
+    .text-page h2 {
+      margin: 0 0 19px;
+      font-size: 1.65em;
+      font-weight: 700;
+      line-height: 1.13;
+      letter-spacing: -.018em;
+    }
+    .text-page p { margin: 0 0 13px; }
+    .text-page p:last-child { margin-bottom: 0; }
+    .text-page em { font-style: italic; }
+    .text-page strong { font-weight: 700; }
+
+
     .toolbar {
+
       position: absolute;
+
       bottom: 8px;
+
       left: 50%;
+
       transform: translateX(-50%);
+
       z-index: 5;
+
       display: flex;
+
       align-items: center;
+
       justify-content: center;
+
       gap: 38px;
+
       width: max-content;
+
       padding: 0;
+
       border: 0;
+
       border-radius: 0;
+
       background: transparent;
+
       box-shadow: none;
+
     }
+
     .toolbar button {
+
       display: grid;
+
       place-items: center;
+
       width: 38px;
+
       height: 38px;
+
       min-width: 0;
+
       padding: 0 0 2px;
+
       border: 1px solid rgba(172, 127, 69, .74);
+
       border-radius: 50%;
+
       background: rgba(36, 27, 22, .32);
+
       box-shadow: inset 0 0 0 1px rgba(229, 190, 126, .18),
+
                   0 3px 9px rgba(0, 0, 0, .19);
+
       color: #dcc29c;
+
       font-family: Georgia, serif;
+
       font-size: 20px;
+
       line-height: 1;
+
       cursor: pointer;
+
       transition: color .18s ease, border-color .18s ease,
+
                   background .18s ease, transform .18s ease;
+
     }
+
     .toolbar button:hover:not(:disabled),
+
     .toolbar button:focus-visible:not(:disabled) {
+
       color: #f5dbb3;
+
       border-color: rgba(222, 180, 112, .95);
+
       background: rgba(73, 46, 28, .65);
+
       transform: translateY(-2px);
+
       outline: none;
+
     }
+
     .toolbar button:focus-visible { box-shadow: 0 0 0 2px rgba(210, 168, 102, .5); }
+
     .toolbar button:disabled {
+
       opacity: .23;
+
       cursor: default;
+
     }
 
     .status {
+
       position: absolute;
+
       width: 1px;
+
       height: 1px;
+
       padding: 0;
+
       margin: -1px;
+
       overflow: hidden;
+
       clip-path: inset(50%);
+
       white-space: nowrap;
+
       border: 0;
+
     }
-
-
-
 
     @media (max-width: 860px) {
 
@@ -530,16 +642,17 @@
 
     }
 
-
-
     @media (max-width: 560px) {
+
       .toolbar { gap: 24px; bottom: 6px; }
+
       .toolbar button { width: 34px; height: 34px; font-size: 18px; }
+
       .close-button { top: 5px; right: 5px; }
+
       .tap-hint { bottom: -50px; white-space: normal; width: 180px; }
+
     }
-
-
 
     @media (prefers-reduced-motion: reduce) {
 
@@ -565,8 +678,6 @@
 
     </div>
 
-
-
     <section class="opened" id="opened" aria-hidden="true">
 
       <div class="backdrop" id="backdrop"></div>
@@ -576,8 +687,6 @@
       <div class="viewer">
 
         <div class="book-wrap">
-
-
 
           <div class="canvas" id="canvas">
 
@@ -611,13 +720,9 @@
 
   </main>
 
-
-
   <script>
 
     "use strict";
-
-
 
     const ASSETS = {
 
@@ -647,7 +752,129 @@
 
     };
 
+    const TEXT_PAGES = {
+      2: `
+        <h2>О языках злых и добрых</h2>
 
+        <p>В день, когда она впервые переступает порог класса зельеварения, никто еще не знает ее имени. Вообще-то ее зовут Беа Харпер — мама учила ее произносить имя именно так, хотя сама всегда называла дочь Беатрис.</p>
+
+        <p>В чемодане, едва ли не выше ее самой, остались фотография отца времен Мировой войны, письмо от мамы, несколько совестливо добытых (украденных) формул из домашней аптечной тетради и баночка аспирина, который здорово спасал от мигрени.</p>
+
+        <p>Позже, к своему удивлению, Беа обнаружит, что аспирином здесь почти никто не пользуется. В копилку удивительных открытий вскоре добавится и отношение к «полукровкам». Это слово она услышит впервые от какого-то слизеринца. Тот выплюнет его с таким презрением, будто ей должно стать стыдно, но Беа не вполне поймет за что именно.</p>
+
+        <p>В Хогвартсе все говорят на одном языке, и поначалу это дается ей с трудом. Английский она знает, конечно, но стоит кому-нибудь заговорить слишком быстро, как половина слов превращается в неразборчивую кашу. Беа называет учеников в зеленых галстуках “наттерами” (от die natter), поэтому староста долго не может понять, на каких таких обидчиков (или существ?) она жалуется. Позже домашний язык станет ее личным шифром: на нем удобно ругаться, записывать секреты и думать о вещах, которые предназначаются только ей.
+</p>
+
+      <p>Некоторые из ее товарищей-пуффендуйцев вскоре узнают, что Беа знает два мира, и потому изо всех сил стараются с ней подружиться. Они обедают вместе в огромной столовой, которая кажется ей зиккуратом, возведенным во имя уюта и сытости. Показывают друг другу фотографии, старые журналы и вырезки из магловских газет: рекламные картинки автомобилей, афиши немого кино, объявления о продаже граммофонов и пластинок с джазом.</p>
+
+      <p>Так Беа узнает, что мир, который она знает так хорошо, для некоторых учеников все равно что разумная жизнь с другой планеты.</p>
+
+      <p>В свою очередь, Беа изо всех сил старается научиться говорить на их языке. Латынь не такая трудная и очень красивая, но чудаковатые названия заклинаний и зелий запоминаются не сразу. Она выучивает длиннющие имена и фамилии важных личностей, учится отличать бубонтубер от мимбулуса мимблетонии, а заодно выясняет, что некоторые растения могут укусить, если обращаться с ними без должного почтения. Дома такого не случалось. По крайней мере, не с растениями.</p>
+
+      <p>Беа надеется, что благодаря усердному труду и настойчивости однажды докажет свое право переступить порог исследовательской сравнительной фармакологии. Ведь этот мир, наверное, станет болеть чуть меньше, если познакомить его с аспирином.</p>
+
+      <p>Но пока Беа в девятнадцатый раз переступает порог класса зельеварения и просит у преподавателя котел, чтобы приготовить уменьшающее зелье.</p>
+
+      <p>Преподаватель смотрит на нее так, будто она предложила сварить обед из собственного учебника. Затем объясняет, что уменьшающее зелье проходят только на третьем курсе и что мисс Харпер, кажется, несколько забегает вперед программы.</p>
+
+      <p>Беа не понимает, что именно в ее просьбе настолько удивительно. И все же в мыслях мелькает — мама будет ей гордиться.</p>
+      `,
+
+        4: `
+    <h2>О ритмах и акцентах</h2>
+
+    <p>Раз в месяц в Кинбридж приезжает торговая ярмарка, и Оуэн обожает бывать там по одной очень важной причине. Седой дедушка с добрым взглядом перекладывает по задним полкам квадратные конверты. Слишком большие, чтобы сойти за письма или открытки. И слишком тонкие, чтобы походить на чайные наборы или вроде того.
+</p>
+    
+    <p>Так Оуэн узнает о граммофонных пластинках. Тяжелых, хрупких, спрятанных в плотные бумажные конверты. Это единственный товар ярмарки, который он купил, а не спер.</p>
+
+    <p>Джоплин, как и любой рэгтайм, звучит для него как дуэль. Пока чья-то палочка плавно взмывает вверх, Оуэн уже ломает ритм. Он вскидывает руку так быстро, что его заклинание добавляет акцент хаоса в заученные движения.</p>
+
+    <p>Фокстрот похож на его дом. Летом, пока старшие братья улепетывают вниз по лестницам по своим важным делам, Оуэн смакует бодрое одиночество. Состояние, когда остаешься дома один и в твоем распоряжении, кажется, целый мир. А значит, и мамина метла. Жаль только, что нельзя взять с собой граммофон. С ним пролетать над рекой, едва касаясь носками воды, было бы куда веселее.</p>
+
+    <p>Стравинским он искренне восхищается. Особенно “Адской пляской Кащея”. Но воспоминания — штука такая: сложные ритмы, резкие акценты и диссонансы впечатались в его память тремя парами глаз.</p>
+
+    <p>Он притаскивает в артельский подвал один из старых переносных граммофонов. Целый чемодан под него выделил. Граммофон — предмет тяжелый, однако крайне ранимый, поэтому почти всю поездку до Хогвартса Оуэн сидит с ним под боком, как курица-наседка.</p>
+
+    <p>Три пары глаз — он переводит взгляд с одних на другие — выражают неловкость, раздражение и тихую надежду, что когда-нибудь этот музыкальный поток закончится.</p>
+
+    <p>Сильнее всех брови хмурит Мэгги: “У меня голова сейчас лопнет”.</p>
+
+    <p>Беа осмысливает услышанное со стороны мастерства автора: “Это определенно сложная композиция”.</p>
+
+    <p>Элиас молчит, вероятно, чтобы его не обидеть. Наверное. Элиас почти всегда молчит.</p>
+
+    <p>Реакция была ожидаемой, хотя небольшую обиду Оуэн все-таки затаил. Все в нем было громким и нарочито нахальным. Кроме тонкого слуха и любви к музыке. Это давало ему ценную и, признаться, приятную возможность смотреть на всех немного свысока. Даже если обозреваемые об этом не знали.</p>
+
+    <p>Зато Оуэн знал.</p>
+
+    <p>У любого воспоминания найдется мелодия. Рассвет — как едва слышный перебор гитарных струн. Тревога — как одинокая клавиша пианино, послушная неумолимому метроному. Дом — как фокстрот, который продолжается, даже когда танцевать уже некому.</p>
+
+    <p>В следующем учебном году он притаскивает новую пластинку — Kitten on the Keys. С уверенностью ставит друзей перед фактом:</p>
+
+    <p>“Это мы”.</p>
+
+    <p>Может, созвучие есть у каждого, нужно лишь попасть в нужную эмоцию. А эмоцией — в нужную тональность. Может быть, его друзья тоже, нет-нет да и, тонкие души.</p>
+
+    <p>Он думает об этом, когда из подвала впервые доносится музыка, которую включил не он.</p>
+  `,
+
+  6: `
+    <h2>О словах и тишине</h2>
+
+    <p>Элиасу Муру девять, когда он впервые узнает, что слова влекут за собой последствия.</p>
+
+    <p>Его отец работает целителем и в годы Мировой войны исчезает из дома по ночам. Иногда возвращается к завтраку, иногда пропадает на несколько дней. От него пахнет лекарствами, табаком и чем-то металлическим, что Элиас поначалу принимает за запах железнодорожных станций. Позже он узнает, что так пахнет кровь.</p>
+
+    <p>В 1918 году к ним в дом приходят люди — очень важные люди в длинных мантиях. Один из них хвалит Элиаса за то, что тот не перебивает взрослых. А потом спрашивает, часто ли отец уходит по ночам и знает ли мальчик, куда именно.</p>
+
+    <p>Элиас отвечает, разумеется. Он воспитанным ребенок и не видит причин лгать взрослым. Тем более что спрашивают они о вещах совершенно очевидных. Да, отец уходит часто. Да, иногда приносил домой чужие вещи, но ведь потом всегда возвращает.</p>
+
+    <p>Отца забирают в тот же вечер. Элиас не раз пытается вспомнить, в какой именно момент его ответы перестают быть словами и становятся доказательствами. Он помнит только, что мама не смотрит на дверь, когда в ту стучат.</p>
+
+    <p>По семейным обстоятельствам в Хогвартс его отправляют на год позже положенного. Мама хотела, чтобы он еще немного побыл дома. Элиас не возражал. У него вообще не было привычки спорить с мамой.</p>
+
+    <p>На первом курсе ему двенадцать, тогда как остальным преимущественно одиннадцать. Разница небольшая, но для самого Элиаса существенная. Он все еще хороший ребенок. Старается не участвовать в бессмысленных затеях, напоминает товарищам о правилах и удерживает их от поступков, последствия которых быстро успевает предугадать.</p>
+
+    <p>К сожалению, его товарищи обладают довольно скудным воображением. Особенно Оуэн.</p>
+
+    <p>Оуэн как-то раз бросает, мол Элиас выглядит так, будто готов извиниться перед дверью, если случайно откроет ее слишком резко. И этот факт раздражает даже преподавателей, хотя, будучи учтивыми взрослыми, те не подают виду. Да, с учебой у него не ладится. Может, думает Элиас, из-за этого?</p>
+
+    <p>Первые дуэли даются ему отвратительно. Альбус Дамблдор, однако, замечает любопытную вещь. Элиас почти никогда не ошибался с направлением заклинания. Его рука реагирует раньше, чем он успевает окончательно испугаться. А если дает себе время сосредоточиться, то попадает в цель с точностью, совершенно несвойственной первокурснику.</p>
+
+    <p>Элиас узнает, что способен очень быстро принимать решения, если перед ним стоит конкретная задача. Например, отразить заклинание. Это проще, чем решить, стоит ли попросить за обедом передать ему соль. Но если обогнать панику, то получится и это.</p>
+
+    <p>Посреди очередного артельского совещания, Оуэн предлагает план, который нарушает как минимум трех школьных правила. Мэгги находит идею замечательной. Беа просит уточнить некоторые технические подробности. Оуэн, разумеется, воспринимает это как безоговорочную поддержку.</p>
+
+    <p>“Нет,” отрезает Элиас.</p>
+
+    <p>Обсуждение останавливается. Элиас и сам несколько удивляется. Хватило лишь одного слова. Он никогда не просил, чтобы его слушали, но в глубине души всегда желал отыскать волшебное место, где за его словами не последует наказание.</p>
+
+    <p>Оуэн пожимает плечами. “Ладно, продумаем получше”, говорит. Элиас знает, что следующий план будет хуже нынешнего. Но благодарно кивает и остается сидеть как сидел.</p>
+
+    <p>Мир не рушится, все важные люди до сих пор в комнате.</p>
+  `,
+
+   8: `
+    <h2>О зверях и не зверях</h2>
+
+    <p>К концу августа их забор по-прежнему стоит криво. Впрочем, теперь хотя бы в другую сторону.</p>
+
+    <p>Они начинают чинить его еще утром. К обеду понимают, что гвозди не желают забиваться, доски отказываются держаться ровно, а четверо юных волшебников спекаются под солнцем как восковые свечи. Спорили долго, работали мало.</p>
+
+    <p>К вечеру все четверо сидят у костра и едят мамины пироги. Пальцы саднит от заноз, коленки в земле, а от одежды сладко пахнет дымом. Оуэн рассказывает что-то совершенно возмутительное. Беа смеется искренне, хотя пытается возразить в знак приличия. Элиас смакует пирожки с капустой.</p>
+
+    <p>Она слушает и думает, что еще год назад почти никто из них не разговаривал друг с другом. А потом резко бьет себя по ноге и вспоминает, что ее отец притащил домой новый вестерн. Она выставляет указательные пальцы в воздух и пережевывает слова, будто Пайк Бишоп. “Если ты встал на чью-то сторону, оставайся с ним. Иначе ты просто зверь!”</p>
+
+    <p>Позже на ее левом колене появится целый Кодекс Артели — длинный, обстоятельный и страшно-ужасно секретный.</p>
+
+    <p>Но первая татуировка появляется на плече. В тот вечер, под чарами невидимости, четыре разных почерка кривовато выводят на плече по одной букве:</p>
+
+    <p>Я Я Я Я — НЕ ЗВЕРЬ</p>
+
+    <p>Последняя буква была особенно кривая. Кажется, кто-то в тот момент смеялся.</p>
+  `
+    };
 
     const PAGE_WIDTH = 432;
 
@@ -658,8 +885,6 @@
     const DURATION_MS = 720;
 
     const LAST_SPREAD = 3;
-
-
 
     const openBookButton = document.getElementById("openBook");
 
@@ -683,8 +908,6 @@
 
     const status = document.getElementById("status");
 
-
-
     let position = -1; // -1 = передняя обложка, 0..3 = развороты, 4 = задняя обложка
 
     let busy = false;
@@ -695,16 +918,17 @@
 
     let touchStart = null;
 
-
-
     function escapeHtml(value) {
+
       return String(value).replace(/[&<>"']/g, ch => ({
+
         "&": "&amp;", "<": "&lt;", ">": "&gt;",
+
         '"': "&quot;", "'": "&#39;"
+
       }[ch]));
+
     }
-
-
 
     function getImage(ref) {
 
@@ -718,41 +942,38 @@
 
     }
 
-
-
     function faceHtml(ref) {
-
-      const imageUrl = getImage(ref);
-
-      const alt = ref === "cover"
-
-        ? "Передняя обложка"
-
-        : ref === "back"
-
-          ? "Задняя обложка"
-
-          : ref === "empty"
-
-            ? ""
-
-            : `Страница ${ref}`;
-
-
-
-      if (ref === "empty") {
-
-        return `<div class="face-body"></div>`;
-
+      // Для страниц, перечисленных в TEXT_PAGES, рисуем бумагу + резкий HTML-текст.
+      // Прозрачность обложек сохраняется: эти случаи обрабатываются отдельно.
+      if (typeof ref === "number" && Object.prototype.hasOwnProperty.call(TEXT_PAGES, ref)) {
+        const side = ref % 2 === 0 ? "right" : "left";
+        return `<div class="face-body"><article class="text-page ${side}"><div class="text-page-inner">${TEXT_PAGES[ref]}</div></article></div>`;
       }
 
+      const imageUrl = getImage(ref);
+      const alt = ref === "cover"
+        ? "Передняя обложка"
+        : ref === "back"
+          ? "Задняя обложка"
+          : ref === "empty"
+            ? ""
+            : `Страница ${ref}`;
 
+      if (ref === "empty") {
+        return `<div class="face-body"></div>`;
+      }
 
       return `<div class="face-body"><img class="image-page" src="${escapeHtml(imageUrl)}" draggable="false" alt="${escapeHtml(alt)}"></div>`;
-
     }
 
+    function isCutout(ref) {
+      return ref === "cover" || ref === "back" || ref === "empty";
+    }
 
+    function setPaper(element, ref) {
+      element.classList.toggle("is-cutout", isCutout(ref));
+      element.innerHTML = faceHtml(ref);
+    }
 
     function setPositionShift(pos) {
 
@@ -762,37 +983,31 @@
 
     }
 
-
-
     function renderStatic(pos) {
 
       book.classList.toggle("front-closed", pos === -1);
 
       book.classList.toggle("back-closed", pos === 4);
 
-
-
       if (pos === -1) {
 
-        leftPaper.innerHTML = faceHtml("empty");
+        setPaper(leftPaper, "empty");
 
-        rightPaper.innerHTML = faceHtml("cover");
+        setPaper(rightPaper, "cover");
 
       } else if (pos === 4) {
 
-        leftPaper.innerHTML = faceHtml("back");
+        setPaper(leftPaper, "back");
 
-        rightPaper.innerHTML = faceHtml("empty");
+        setPaper(rightPaper, "empty");
 
       } else {
 
-        leftPaper.innerHTML = faceHtml(2 * pos + 1);
+        setPaper(leftPaper, 2 * pos + 1);
 
-        rightPaper.innerHTML = faceHtml(2 * pos + 2);
+        setPaper(rightPaper, 2 * pos + 2);
 
       }
-
-
 
       setPositionShift(pos);
 
@@ -806,15 +1021,11 @@
 
           : `Разворот ${pos + 1} / 4`;
 
-
-
       prevButton.disabled = busy || pos === -1;
 
       nextButton.disabled = busy || pos === 4;
 
     }
-
-
 
     function fitBook() {
 
@@ -832,8 +1043,6 @@
 
     }
 
-
-
     function createLeaf(direction, front, back) {
 
       const leaf = document.createElement("div");
@@ -842,15 +1051,12 @@
 
       leaf.innerHTML = `
 
-        <div class="leaf-face front">${faceHtml(front)}</div>
-
-        <div class="leaf-face back">${faceHtml(back)}</div>`;
+        <div class="leaf-face front${isCutout(front) ? " is-cutout" : ""}">${faceHtml(front)}</div>
+        <div class="leaf-face back${isCutout(back) ? " is-cutout" : ""}">${faceHtml(back)}</div>`;
 
       return leaf;
 
     }
-
-
 
     function go(delta) {
 
@@ -859,8 +1065,6 @@
       const target = position + delta;
 
       if (target < -1 || target > 4) return;
-
-
 
       busy = true;
 
@@ -872,33 +1076,31 @@
 
       book.classList.remove("front-closed", "back-closed");
 
-
-
       let leaf;
 
       if (delta === 1) {
 
         if (from === -1) {
 
-          leftPaper.innerHTML = faceHtml("empty");
+          setPaper(leftPaper, "empty");
 
-          rightPaper.innerHTML = faceHtml(2);
+          setPaper(rightPaper, 2);
 
           leaf = createLeaf("forward", "cover", 1);
 
         } else if (from === LAST_SPREAD) {
 
-          leftPaper.innerHTML = faceHtml(7);
+          setPaper(leftPaper, 7);
 
-          rightPaper.innerHTML = faceHtml("empty");
+          setPaper(rightPaper, "empty");
 
           leaf = createLeaf("forward", 8, "back");
 
         } else {
 
-          leftPaper.innerHTML = faceHtml(2 * from + 1);
+          setPaper(leftPaper, 2 * from + 1);
 
-          rightPaper.innerHTML = faceHtml(2 * target + 2);
+          setPaper(rightPaper, 2 * target + 2);
 
           leaf = createLeaf("forward", 2 * from + 2, 2 * target + 1);
 
@@ -908,33 +1110,31 @@
 
         if (from === 4) {
 
-          leftPaper.innerHTML = faceHtml(7);
+          setPaper(leftPaper, 7);
 
-          rightPaper.innerHTML = faceHtml("empty");
+          setPaper(rightPaper, "empty");
 
           leaf = createLeaf("backward", "back", 8);
 
         } else if (from === 0) {
 
-          leftPaper.innerHTML = faceHtml("empty");
+          setPaper(leftPaper, "empty");
 
-          rightPaper.innerHTML = faceHtml(2);
+          setPaper(rightPaper, 2);
 
           leaf = createLeaf("backward", 1, "cover");
 
         } else {
 
-          leftPaper.innerHTML = faceHtml(2 * target + 1);
+          setPaper(leftPaper, 2 * target + 1);
 
-          rightPaper.innerHTML = faceHtml(2 * from + 2);
+          setPaper(rightPaper, 2 * from + 2);
 
           leaf = createLeaf("backward", 2 * from + 1, 2 * target + 2);
 
         }
 
       }
-
-
 
       book.appendChild(leaf);
 
@@ -945,8 +1145,6 @@
         leaf.classList.add("turned");
 
       }));
-
-
 
       clearTimeout(animationTimer);
 
@@ -964,8 +1162,6 @@
 
     }
 
-
-
     function openViewer() {
 
       opened.classList.add("active");
@@ -979,8 +1175,6 @@
       setTimeout(() => closeBookButton.focus(), 30);
 
     }
-
-
 
     function closeViewer() {
 
@@ -1002,8 +1196,6 @@
 
     }
 
-
-
     openBookButton.addEventListener("click", openViewer);
 
     closeBookButton.addEventListener("click", closeViewer);
@@ -1014,11 +1206,11 @@
 
     nextButton.addEventListener("click", () => go(1));
 
-
-
     book.addEventListener("click", event => {
 
       if (busy) return;
+      // Не перелистываем при клике по тексту: текст можно выделять.
+      if (event.target.closest('.text-page')) return;
 
       if (position === -1) { go(1); return; }
 
@@ -1029,8 +1221,6 @@
       go(event.clientX < rect.left + rect.width / 2 ? -1 : 1);
 
     });
-
-
 
     document.addEventListener("keydown", event => {
 
@@ -1064,8 +1254,6 @@
 
     });
 
-
-
     canvas.addEventListener("touchstart", e => {
 
       if (e.touches.length === 1) {
@@ -1075,8 +1263,6 @@
       }
 
     }, { passive: true });
-
-
 
     canvas.addEventListener("touchend", e => {
 
@@ -1098,8 +1284,6 @@
 
     }, { passive: false });
 
-
-
     window.addEventListener("resize", fitBook);
 
     if ("ResizeObserver" in window) {
@@ -1107,8 +1291,6 @@
       new ResizeObserver(fitBook).observe(canvas);
 
     }
-
-
 
     fitBook();
 
