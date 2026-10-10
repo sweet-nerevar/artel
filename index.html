@@ -130,9 +130,6 @@
 
       pointer-events: none;
 
-      /* Отзеркалить ТОЛЬКО картинку закрытой книжки, не всю сцену. */
-      transform: scaleX(-1);
-
     }
 
     /* оверлей */
@@ -182,8 +179,7 @@
       padding: 18px 18px 58px;
 
     }
-
-    /* Более заметный крестик поверх светлой или темной комнаты. */
+    
     .close-button {
       position: absolute;
       top: 14px;
@@ -385,7 +381,6 @@
 
     }
 
-    /* Обложки и пустые стороны: никаких прямоугольных подложек / теней. */
     .paper.is-cutout,
     .leaf-face.is-cutout {
       background: transparent;
@@ -447,15 +442,6 @@
 
     }
 
-    /* Зеркалим только обложки (спереди и сзади); текст и рисунки нет. */
-    .image-page.mirrored-cover {
-      transform: scaleX(-1);
-    }
-
-    /* ================================================
-       Страницы с НАСТОЯЩИМ ТЕКСТОМ поверх текстуры.
-       Обложки и остальные страницы остаются как были.
-       ================================================ */
     .text-page {
       width: 100%;
       height: 100%;
@@ -471,7 +457,6 @@
       -webkit-user-select: text;
     }
 
-    /* Больше внутренний отступ у корешка. */
     .text-page.right { padding: 36px 32px 30px 43px; }
     .text-page.left  { padding: 36px 43px 30px 32px; }
 
@@ -572,7 +557,7 @@
 
       transition: color .18s ease, border-color .18s ease,
 
-                  background .18s ease, transform .18s ease;
+      background .18s ease, transform .18s ease;
 
     }
 
@@ -658,11 +643,11 @@
 
   <main class="library" id="library">
 
-    <div class="shelf-stage" aria-label="Полка с книжечкой Мэгги">
+    <div class="shelf-stage" aria-label="shelf">
 
       <button class="book-trigger" id="openBook" type="button" aria-label="artel lorebook">
 
-        <img src="./wholebook.webp" alt="book of artel" draggable="false">
+        <img src="./wholebook2.webp" alt="book of artel" draggable="false">
 
       </button>
 
@@ -933,8 +918,6 @@
     }
 
     function faceHtml(ref) {
-      // Для страниц, перечисленных в TEXT_PAGES, рисуем бумагу + резкий HTML-текст.
-      // Прозрачность обложек сохраняется: эти случаи обрабатываются отдельно.
       if (typeof ref === "number" && Object.prototype.hasOwnProperty.call(TEXT_PAGES, ref)) {
         const side = ref % 2 === 0 ? "right" : "left";
         return `<div class="face-body"><article class="text-page ${side}"><div class="text-page-inner">${TEXT_PAGES[ref]}</div></article></div>`;
@@ -1200,7 +1183,7 @@
     book.addEventListener("click", event => {
 
       if (busy) return;
-      // Не перелистываем при клике по тексту: текст можно выделять.
+
       if (event.target.closest('.text-page')) return;
 
       if (position === -1) { go(1); return; }
