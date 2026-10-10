@@ -83,37 +83,24 @@
     /* закрытая книга */
 
     .book-trigger {
-
       position: absolute;
-
-      left: 10%;
-
-      top: 10%;
-
-      width: 32%;
-
+      left: 38%;
+      top: 48%;
+      width: 140px;
+      transform: translate(-50%, -50%);
       border: 0;
-
       background: transparent;
-
       padding: 0;
-
       cursor: pointer;
-
       transition: transform .28s ease, filter .28s ease;
-
       filter: drop-shadow(0 10px 14px rgba(0,0,0,.35));
-
     }
 
     .book-trigger:hover,
-
     .book-trigger:focus-visible {
-
+      transform: translate(-50%, -50%) translateY(-3px) scale(1.04);
       filter: drop-shadow(0 15px 18px rgba(0,0,0,.42));
-
       outline: none;
-
     }
 
     .book-trigger img {
