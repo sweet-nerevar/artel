@@ -84,8 +84,8 @@
 
     .book-trigger {
       position: absolute;
-      left: 38%;
-      top: 48%;
+      left: 50%;
+      top: 50%;
       width: 140px;
       transform: translate(-50%, -50%);
       border: 0;
@@ -163,6 +163,41 @@
 
     }
     
+    /* FULLSCREEN: весь монитор вместо рамки на холсте. */
+    .opened:fullscreen,
+    .opened:-webkit-full-screen {
+      width: 100vw;
+      height: 100vh;
+      background: #130e12;
+    }
+
+    .opened.fullscreen-mode .backdrop {
+      background: radial-gradient(ellipse at center,
+        rgba(45, 31, 31, .22) 0%, rgba(10, 8, 11, .94) 90%);
+    }
+
+    .opened.fullscreen-mode .viewer {
+      padding: 12px 18px 64px;
+    }
+
+    .opened.fullscreen-mode .book-wrap {
+      width: min(100%, 1900px);
+      height: min(100%, 1200px);
+      animation: lorebook-jump .42s cubic-bezier(.18, .8, .21, 1) both;
+    }
+
+    .opened.fullscreen-mode .canvas { inset: 4px 0 56px; }
+
+    @keyframes lorebook-jump {
+      0%   { opacity: .15; transform: scale(.83); filter: blur(9px); }
+      65%  { opacity: 1; transform: scale(1.025); filter: blur(0); }
+      100% { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .opened.fullscreen-mode .book-wrap { animation: none; }
+    }
+
     .close-button {
       position: absolute;
       top: 14px;
@@ -992,7 +1027,7 @@
 
         (canvas.clientHeight - 18) / BOOK_HEIGHT,
 
-        1.45
+        document.fullscreenElement === opened ? 3 : 1.45
 
       );
 
@@ -1119,39 +1154,74 @@
 
     }
 
+    let wasReallyFullscreen = false;
+
+    // Called directly from the cover's click handler: the browser requires a user gesture.
     function openViewer() {
+      if (opened.classList.contains("active")) return;
 
       opened.classList.add("active");
-
       opened.setAttribute("aria-hidden", "false");
-
-      fitBook();
-
+      position = -1;
       renderStatic(position);
 
-      setTimeout(() => closeBookButton.focus(), 30);
+      const beginReading = () => {
+        if (!opened.classList.contains("active")) return;
+        fitBook();
+        // Open the front cover automatically: no second click needed.
+        go(1);
+        closeBookButton.focus({ preventScroll: true });
+      };
 
+      // IMPORTANT: requestFullscreen must happen synchronously during the click.
+      if (typeof opened.requestFullscreen === "function") {
+        try {
+          const request = opened.requestFullscreen({ navigationUI: "hide" });
+          Promise.resolve(request)
+            .then(beginReading)
+            .catch(err => {
+              console.info("Fullscreen is not allowed by this embedding environment:", err);
+              opened.classList.remove("fullscreen-mode");
+              beginReading(); // fallback: book still opens in the available iframe
+            });
+        } catch (err) {
+          console.info("Fullscreen is not available:", err);
+          beginReading();
+        }
+      } else {
+        beginReading();
+      }
     }
 
     function closeViewer() {
+      if (document.fullscreenElement === opened) {
+        document.exitFullscreen().catch(() => {});
+      }
 
-      opened.classList.remove("active");
-
+      opened.classList.remove("active", "fullscreen-mode");
       opened.setAttribute("aria-hidden", "true");
-
+      wasReallyFullscreen = false;
       busy = false;
-
       clearTimeout(animationTimer);
-
       position = -1;
-
       Array.from(book.querySelectorAll('.leaf')).forEach(node => node.remove());
-
       renderStatic(position);
-
-      openBookButton.focus();
-
+      openBookButton.focus({ preventScroll: true });
     }
+
+    document.addEventListener("fullscreenchange", () => {
+      const fullscreen = document.fullscreenElement === opened;
+      opened.classList.toggle("fullscreen-mode", fullscreen);
+      if (fullscreen) {
+        wasReallyFullscreen = true;
+        fitBook();
+      } else if (wasReallyFullscreen && opened.classList.contains("active")) {
+        // The browser's Escape key also exits fullscreen. Close the book as well.
+        closeViewer();
+      } else {
+        wasReallyFullscreen = false;
+      }
+    });
 
     openBookButton.addEventListener("click", openViewer);
 
